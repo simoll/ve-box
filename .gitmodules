@@ -1,0 +1,3 @@
+[submodule "ve-base-dev-docker"]
+	path = ve-base-dev-docker
+	url = ./ve-base-dev-docker/
