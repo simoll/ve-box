@@ -1,5 +1,6 @@
 #!/usr/bin/env/python3
 
+import sys
 import os
 from os import path
 import shlex, subprocess, sys, errno
@@ -168,11 +169,22 @@ def build_pinned_context(versions, base_img, img_version, nec_version):
     build_repofile(repo_out, img_version)
 
 
-versions = query_package_versions(pinned_rpms)
-base_img="centos"
-centos_img_version="8.3.2011"
+try:
+  base_img = sys.argv[1]
+  centos_img_version = sys.argv[2]
+  nec_version = sys.argv[3]
+except:
+  print("ve-box.py <BaseImg> <BaseImgOSVersion> <NEC-Version>")
+  print("Example: ve-box.py centos 8.3.2011 2.3-1")
+  raise SystemExit(1)
+
+# base_img="centos"
+# centos_img_version="8.3.2011"
+# centos_img_version="7.9.2009"
 
 # TODO: Infer nec-version
-nec_version="2.3-1"
+# nec_version="2.3-1"
+
+versions = query_package_versions(pinned_rpms)
 
 build_pinned_context(versions, base_img, centos_img_version, nec_version)
