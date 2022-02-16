@@ -119,10 +119,14 @@ def query_package_versions(rpms):
   return res
 
 def get_version_number(version):
+  if version is None:
+    return None
   parts = version.split("-")
   return parts[0]
     
 def get_fixed_install_command(rpm, version_number):
+  if version_number is None:
+    return "yum -y install {} ;".format(rpm)
   return "yum -y install {}-{} ; yum versionlock add {} ;".format(rpm, version_number, rpm)
 
 def build_dockerfile(out, versions, base_img, img_version, nec_version):
