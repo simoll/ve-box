@@ -13,6 +13,12 @@ IMAGE_NAME=vebox
 VERSION_TAG=develop
 VEBOX_CONTAINER=vebox
 
+# Current user info for creating it inside the container
+CUID=$(shell id -u)
+CUNAME=$(shell id -un)
+CGID=$(shell id -g)
+CGNAME=$(shell id -gn)
+
 BASE_PATH=${PWD}/ve-base-dev-docker
 
 all: build_context build_image run_image
@@ -38,12 +44,12 @@ build_image:
 run_image:
 	echo "Device ${VE}"
 	docker run \
+		-e CURR_UNAME=${CUNAME} -e CURR_GNAME=${CGNAME} \
+		-e CURR_UID=${CUID} -e CURR_GID=${CGID} -e CURR_HOME=${HOME} \
 		-v /dev:/dev:z \
 	        --device ${VE}:${VE} \
 	        -v /var/opt/nec/ve/veos:/var/opt/nec/ve/veos:z \
 	        -v ${HOME}:${HOME}:z \
-	        -v /etc/group:/etc/group:ro \
-	        -v /etc/passwd:/etc/passwd:ro \
 		-u $(shell id -u):$(shell id -g) \
 		-w ${PWD} \
 		--rm -it \
